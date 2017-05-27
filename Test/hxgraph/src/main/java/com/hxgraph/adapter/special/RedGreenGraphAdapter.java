@@ -18,12 +18,7 @@ import java.util.List;
 
 public class RedGreenGraphAdapter extends GraphAdapterImp<RedGreenGraphModel,RedGreenGraphStrategyParam> {
 
-    protected double[] mDValues;//转换并处理后的原始数据
     protected int[] mIColors;//转换并处理后的对应原始数据的颜色参数
-    protected double mDMaxValue;//mDValues 范围内的最大值
-    protected int mIMaxIndex;//mDValues 范围内的最大值的坐标
-    protected double mDMinValue;//mDValues 范围内的最小值
-    protected int mIMinIndex;//mDValues 范围内的最小值坐标
 
     @Override
     public GraphStrategyImp<RedGreenGraphModel> getGraphStrategy() {
@@ -73,10 +68,11 @@ public class RedGreenGraphAdapter extends GraphAdapterImp<RedGreenGraphModel,Red
             mData.setmIColors(params.getColors());
             this.mIColors = mData.getmIColors();
             mData.setmFReferenceLineRelativePos(params.getReferenceLineRelativePos());
+            maxMin = params.getMaxMin();
             if(params.getxCoordinates() != null)
                 mData.setmFXCoordinates(params.getxCoordinates());
         }
-        maxMinValue();
+        calculateMaxMin();
         calculateYcoordinateScale();
         return mData;
     }
@@ -138,7 +134,7 @@ public class RedGreenGraphAdapter extends GraphAdapterImp<RedGreenGraphModel,Red
     }
 
     //搜索最值以及下标
-    private void maxMinValue(){
+    protected void maxMinValue(){
         if(mDValues != null){
             mIMaxIndex = 0;
             mIMinIndex = 0;

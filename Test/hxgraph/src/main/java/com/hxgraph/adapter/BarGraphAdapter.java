@@ -103,10 +103,11 @@ public class BarGraphAdapter extends GraphAdapterImp<BarGraphModel,BarGraphStrat
             mData.setmIDefaultColor(params.getDefaultColor());
             mData.setmFBarWidth(params.getDefaultBarWidth());
             mData.setmBIsStroke(params.isStroke());
+            maxMin = params.getMaxMin();
             if(params.getxCoordinates() != null)
                 mData.setmFXCoordinates(params.getxCoordinates());
         }
-        maxMinValue();
+        calculateMaxMin();
         calculateYcoordinateScale();
         return mData;
     }
@@ -151,7 +152,7 @@ public class BarGraphAdapter extends GraphAdapterImp<BarGraphModel,BarGraphStrat
     }
 
     //搜索最值以及下标
-    private void maxMinValue(){
+    protected void maxMinValue(){
         if(mDValues != null){
             mIMaxIndex = 0;
             mIMinIndex = 0;

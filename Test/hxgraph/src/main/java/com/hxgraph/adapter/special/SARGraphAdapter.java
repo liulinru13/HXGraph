@@ -16,13 +16,7 @@ import java.util.List;
  */
 
 public class SARGraphAdapter extends GraphAdapterImp<SARGraphModel,SARGraphStrategyParam> {
-
-    protected double[] mDValues;//转换并处理后的原始数据
     protected int[] mColors;
-    protected double mDMaxValue;//mDValues 范围内的最大值
-    protected int mIMaxIndex;//mDValues 范围内的最大值的坐标
-    protected double mDMinValue;//mDValues 范围内的最小值
-    protected int mIMinIndex;//mDValues 范围内的最小值坐标
 
     @Override
     protected SARGraphModel getNewModel() {
@@ -68,10 +62,11 @@ public class SARGraphAdapter extends GraphAdapterImp<SARGraphModel,SARGraphStrat
             mColors = params.getColors();
             mData.setmIColors(mColors);
             mData.setmFStrokeWidth(params.getStrokeWidth());
+            maxMin = params.getMaxMin();
             if(params.getxCoordinates() != null)
                 mData.setmFXCoordinates(params.getxCoordinates());
         }
-        maxMinValue();
+        calculateMaxMin();
         calculateYcoordinateScale();
         return mData;
     }
@@ -103,7 +98,7 @@ public class SARGraphAdapter extends GraphAdapterImp<SARGraphModel,SARGraphStrat
     }
 
     //搜索最值以及下标
-    private void maxMinValue(){
+    protected void maxMinValue(){
         if(mDValues != null){
             mIMaxIndex = 0;
             mIMinIndex = 0;

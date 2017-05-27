@@ -20,10 +20,6 @@ public class MagicWaveGraphAdapter extends GraphAdapterImp<MagicWaveGraphModel,M
     protected int[] mColors;
     protected int[] mDValues;
 
-    protected double mDMaxValue;//mDValues 范围内的最大值
-    protected int mIMaxIndex;//mDValues 范围内的最大值的坐标
-    protected double mDMinValue;//mDValues 范围内的最小值
-    protected int mIMinIndex;//mDValues 范围内的最小值坐标
     @Override
     protected MagicWaveGraphModel getNewModel() {
         return new MagicWaveGraphModel();
@@ -67,6 +63,11 @@ public class MagicWaveGraphAdapter extends GraphAdapterImp<MagicWaveGraphModel,M
         }
         calculateYcoordinateScale();
         return mData;
+    }
+
+    @Override
+    protected void maxMinValue() {
+
     }
 
     protected void calculateYcoordinateScale(){

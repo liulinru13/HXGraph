@@ -21,12 +21,6 @@ import java.util.Map;
 
 public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrategyParam> {
 
-
-    protected double[] mDValues;//转换并处理后的原始数据
-    protected double mDMaxValue;//mDValues 范围内的最大值
-    protected int mIMaxIndex;//mDValues 范围内的最大值的坐标
-    protected double mDMinValue;//mDValues 范围内的最小值
-    protected int mIMinIndex;//mDValues 范围内的最小值坐标
     protected GraphOrientation orientation = GraphOrientation.UP;
 
     @Override
@@ -56,10 +50,11 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
             mData.setmFStrokeWidth(params.getStrokeWidth());
             mData.setmOLineType(params.getLineType());
             mData.setmDotLineParam(params.getDotLineParam());
+            maxMin = params.getMaxMin();
             if(params.getxCoordinates() != null)
                 mData.setmFXCoordinates(params.getxCoordinates());
         }
-        maxMinValue();
+        calculateMaxMin();
         calculateYcoordinateScale(orientation);
         return mData;
     }
@@ -92,12 +87,7 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
         List<LinePointModel> list = new ArrayList<LinePointModel>();
         double diff = mDMaxValue - mDMinValue;
         diff = diff < 0.0 ? 0.0 : diff;
-        //在这个范围内，近似看做最值相等
-//        if(GraphUtils.doubleEqual0(diff)){
-//
-//        }else {
-//
-//        }
+
         for (int i = 0; i < mDValues.length; i++) {
             LinePointModel point = new LinePointModel();
             point.setfXcoordinateRaw(Constant.fDefaultX);
@@ -114,7 +104,7 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
     }
 
     //搜索最值以及下标
-    private void maxMinValue(){
+    protected void maxMinValue(){
         if(mDValues != null){
             mIMaxIndex = 0;
             mIMinIndex = 0;

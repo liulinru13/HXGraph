@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 
 import com.hxgraph.graphstrategy.GraphStrategyImp;
 import com.hxgraph.model.IPoint;
+import com.hxgraph.model.TagMaxMin;
 import com.hxgraph.model.imp.PointCollectionImp;
 import com.hxgraph.model.param.IStrategyParams;
 import com.hxgraph.model.param.IStrategyParamsImp;
@@ -22,6 +23,12 @@ public abstract class GraphAdapterImp<T extends PointCollectionImp,P extends ISt
     protected T mData;
     protected GraphStrategyImp<T> mStrategy;
 
+    protected double[] mDValues;//转换并处理后的原始数据
+    protected double mDMaxValue;//mDValues 范围内的最大值
+    protected int mIMaxIndex;//mDValues 范围内的最大值的坐标
+    protected double mDMinValue;//mDValues 范围内的最小值
+    protected int mIMinIndex;//mDValues 范围内的最小值坐标
+    protected TagMaxMin maxMin;//外部传入的最值，可能和 mDValues 中的最值不同，优先使用外部传入的
     /**
      * 填充原始数据，原始数据的类型需要与对应的适配器相符
      * @param rawData
@@ -37,6 +44,21 @@ public abstract class GraphAdapterImp<T extends PointCollectionImp,P extends ISt
      */
     protected abstract T getNewModel();
 
+    /**
+     * 计算最值
+     */
+    protected abstract void maxMinValue();
+
+    protected void calculateMaxMin(){
+        if(maxMin == null){
+            maxMinValue();
+        }else{
+            mIMaxIndex = 0;
+            mIMinIndex = 0;
+            mDMaxValue = maxMin.getMaxValue();
+            mDMinValue= maxMin.getMinValue();
+        }
+    }
     /**
      * 设置x方向上的比例，需要在 wrapRawData 方法之后调用才会有效
      * @param xsclae 0.0f - 1.0f
@@ -142,4 +164,12 @@ public abstract class GraphAdapterImp<T extends PointCollectionImp,P extends ISt
      * @return
      */
     public abstract GraphStrategyImp<T> getGraphStrategy();
+
+    public TagMaxMin getMaxMin() {
+        return maxMin;
+    }
+
+    public void setMaxMin(TagMaxMin maxMin) {
+        this.maxMin = maxMin;
+    }
 }

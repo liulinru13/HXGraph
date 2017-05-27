@@ -74,14 +74,15 @@ public abstract class VolumeGraphAdapter extends GraphAdapterImp<VolumeGraphMode
             mData.setmFBarWidth(params.getBarWidth());
             if(params.getxCoordinates() != null)
                 mData.setmFXCoordinates(params.getxCoordinates());
+            maxMin = params.getMaxMin();
         }
-        maxMinValue();
+        calculateMaxMin();
         calculateYcoordinateScale();
         return mData;
     }
 
     //搜索最值以及下标
-    private void maxMinValue(){
+    protected void maxMinValue(){
         if(mDValues != null){
             mIMaxIndex = 0;
             mIMinIndex = 0;

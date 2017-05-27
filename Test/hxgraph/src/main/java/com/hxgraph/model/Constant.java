@@ -11,7 +11,7 @@ public class Constant {
 
     public static final int NULLVALUE = 0x80000000;
     /*************线条常量************/
-    public static float fDefaultStrokeWidth = 5;//默认线条宽度
+    public static float fDefaultStrokeWidth = 2;//默认线条宽度
     public static float fDefaultStrokeWidthBlod = 6.5f;//默认线条宽度
     public static float fDefaultBarWidth = 20;//默认柱子宽度
     public static int iDefaultStrokeColor = Color.BLACK;//默认线条颜色
