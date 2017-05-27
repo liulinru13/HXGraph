@@ -1,0 +1,12 @@
+com.hxgraph
+com.hxgraph.adapter
+com.hxgraph.adapter.special
+com.hxgraph.graphstrategy
+com.hxgraph.graphstrategy.special
+com.hxgraph.model
+com.hxgraph.model.imp
+com.hxgraph.model.imp.group
+com.hxgraph.model.imp.group.special
+com.hxgraph.model.imp.raw
+com.hxgraph.model.param
+com.hxgraph.model.param.special

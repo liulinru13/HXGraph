@@ -1,0 +1,49 @@
+package com.hxgraph.model.param;
+
+import com.hxgraph.model.Constant;
+import com.hxgraph.model.imp.group.LineModel;
+
+/**
+ * 点画线 LineModel 参数集合
+ * Created by liulinru on 2017/4/21.
+ */
+
+public class DotToLineStrategyParam extends IStrategyParamsImp {
+
+    private int color = Constant.iDefaultStrokeColor;//线条颜色
+    private float strokeWidth = Constant.fDefaultStrokeWidth;//线条宽度
+    private LineModel.LineType lineType = LineModel.LineType.SOLID_LINE;//默认实线
+    private float[] dotLineParam = Constant.iDefaultDotLineParam;//默认虚线绘制参数
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public float getStrokeWidth() {
+        return strokeWidth;
+    }
+
+    public void setStrokeWidth(float strokeWidth) {
+        this.strokeWidth = strokeWidth;
+    }
+
+    public LineModel.LineType getLineType() {
+        return lineType;
+    }
+
+    public void setLineType(LineModel.LineType lineType) {
+        this.lineType = lineType;
+    }
+
+    public float[] getDotLineParam() {
+        return dotLineParam;
+    }
+
+    public void setDotLineParam(float[] dotLineParam) {
+        this.dotLineParam = dotLineParam;
+    }
+}
