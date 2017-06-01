@@ -58,8 +58,9 @@ public class RedGreenGraphStrategy extends GraphStrategyImp<RedGreenGraphModel> 
                 fXcoordinate += fXstepWidth * fXscale + mPointCollection.getmFStrokeWidth();
             else
                 fXcoordinate = xCoordinates[index];
-            if(point == null)
+            if(point == null || point.ismBNeedSkip())
                 continue;
+
             float yCoordinate = (referenceCoordinate - point.getfYcoordinateRaw())*fYscale;
             if(yCoordinate <= 0.0f){
                 yCoordinate = fTopLimit;
@@ -67,7 +68,6 @@ public class RedGreenGraphStrategy extends GraphStrategyImp<RedGreenGraphModel> 
                 yCoordinate = fBottomLimit;
             }
             point.setfYcoordinateRaw(yCoordinate);
-            point.setfXcoordinate(fXcoordinate);
             mPaint.setColor(point.getmIColor());
             canvas.drawLine(point.getfXcoordinate(),referenceCoordinate
                     ,point.getfXcoordinate(),point.getfYcoordinateRaw(),mPaint);

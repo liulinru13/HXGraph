@@ -48,7 +48,7 @@ public class HXKLineAdapter extends KLineAdapter {
     protected void calculateYcoordinateScale(){
         List<KLinePointModel> list = new ArrayList<KLinePointModel>();
         double diff = mDMaxValue - mDMinValue;
-        diff = diff < 0.0 ? 0.0 : diff;
+        diff = diff <= 0.0 ? 1.0 : diff;
 
         for (int i = 0; i < mDValues[0].length; i++) {
             HXKLinePointModel point = new HXKLinePointModel();

@@ -9,6 +9,7 @@ import com.hxgraph.model.IPoint;
  */
 
 public abstract class PointImp implements IPoint {
+    private boolean mBNeedSkip = false;//是否需要跳过这个数据点
     private int mIColor = Constant.iDefaultStrokeColor;//颜色
 
     /**
@@ -25,5 +26,13 @@ public abstract class PointImp implements IPoint {
      */
     public void setmIColor(int mIColor) {
         this.mIColor = mIColor;
+    }
+
+    public boolean ismBNeedSkip() {
+        return mBNeedSkip;
+    }
+
+    public void setmBNeedSkip(boolean mBNeedSkip) {
+        this.mBNeedSkip = mBNeedSkip;
     }
 }

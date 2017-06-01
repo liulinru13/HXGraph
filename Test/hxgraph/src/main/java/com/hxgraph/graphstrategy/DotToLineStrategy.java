@@ -63,6 +63,7 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
                 xCoordinates = mPointCollection.getmFXCoordinates();
             }
         }
+        //自己计算x坐标还是使用外部传进来的坐标
         if(calculateXSelf)
             calculateXY(firstPoint,fYscale,fTopLimit,fBottomLimit,fXcoordinate);
         else
@@ -71,13 +72,15 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
         for(int index = 0;index < data.size()-1;index++){
             LinePointModel point = data.get(index);
             LinePointModel nextPoint = data.get(index+1);
-            if(point == null)
-                continue;
+
             if(calculateXSelf)
                 fXcoordinate += fXstepWidth * fXscale;
             else
                 fXcoordinate = xCoordinates[index];
             calculateXY(nextPoint,fYscale,fTopLimit,fBottomLimit,fXcoordinate);
+            //两点成线，只要有一个点跳过，这条线就画不了，但是需要保留点的x坐标
+            if(point == null || point.ismBNeedSkip() || nextPoint.ismBNeedSkip())
+                continue;
             canvas.drawLine(point.getfXcoordinate(),point.getfYcoordinate()
                     ,nextPoint.getfXcoordinate(),nextPoint.getfYcoordinate(),mPaint);
         }
@@ -85,10 +88,12 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
 
     protected void calculateXY(LinePointModel point,float fYscale,float fTopLimit,
                              float fBottomLimit,float fXcoordinate){
-        float yCoordinate = Math.min(point.getfYcoordinateRaw()*fYscale,fBottomLimit);
-        yCoordinate = Math.max(yCoordinate,fTopLimit);
-
+        //跳过的线条不需要计算y坐标
+        if(!point.ismBNeedSkip()) {
+            float yCoordinate = Math.min(point.getfYcoordinateRaw() * fYscale, fBottomLimit);
+            yCoordinate = Math.max(yCoordinate, fTopLimit);
+            point.setfYcoordinate(yCoordinate);
+        }
         point.setfXcoordinate(fXcoordinate);
-        point.setfYcoordinate(yCoordinate);
     }
 }

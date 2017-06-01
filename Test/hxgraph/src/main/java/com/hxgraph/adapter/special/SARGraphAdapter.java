@@ -77,7 +77,7 @@ public class SARGraphAdapter extends GraphAdapterImp<SARGraphModel,SARGraphStrat
     protected void calculateYcoordinateScale(){
         List<LinePointModel> list = new ArrayList<LinePointModel>();
         double diff = mDMaxValue - mDMinValue;
-        diff = diff < 0.0 ? 0.0 : diff;
+        diff = diff <= 0.0 ? 1.0 : diff;
         for (int i = 0; i < mDValues.length; i++) {
             LinePointModel point = new LinePointModel();
             point.setfXcoordinateRaw(Constant.fDefaultX);

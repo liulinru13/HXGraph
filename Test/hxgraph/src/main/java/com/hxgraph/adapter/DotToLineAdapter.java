@@ -69,6 +69,8 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
         List<LinePointModel> list = mData.getIPointSet();
         if(list != null){
             for(LinePointModel pointModel : list){
+                if(pointModel.ismBNeedSkip())
+                    continue;
                 float scale = pointModel.getfYValuePercent();
                 pointModel.setfYcoordinateRaw(graphHeight*scale);
             }
@@ -86,13 +88,18 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
     protected void calculateYcoordinateScale(GraphOrientation orientation){
         List<LinePointModel> list = new ArrayList<LinePointModel>();
         double diff = mDMaxValue - mDMinValue;
-        diff = diff < 0.0 ? 0.0 : diff;
+        diff = diff <= 0.0 ? 1.0 : diff;
 
         for (int i = 0; i < mDValues.length; i++) {
             LinePointModel point = new LinePointModel();
-            point.setfXcoordinateRaw(Constant.fDefaultX);
-            point.setfYValuePercent((float) orientation.getScale(diff,mDMinValue,mDValues[i]));
-            point.setfValue((float) mDValues[i]);
+            //无效值需要跳过
+            if(mDValues[i] != Constant.MINVALUE) {
+                point.setfXcoordinateRaw(Constant.fDefaultX);
+                point.setfYValuePercent((float) orientation.getScale(diff, mDMinValue, mDValues[i]));
+                point.setfValue((float) mDValues[i]);
+            }else {
+                point.setmBNeedSkip(true);
+            }
             list.add(point);
             if(mIMinIndex == i){
                 mData.getmMaxMinPoints().setMinPoint(point,i);
@@ -111,6 +118,9 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
             mDMaxValue = mDValues[0];
             mDMinValue= mDValues[0];
             for(int i=0;i<mDValues.length;i++){
+                //跳过无效值
+                if(mDValues[i] == Constant.MINVALUE)
+                    continue;
                 if(mDMaxValue < mDValues[i]){
                     mDMaxValue = mDValues[i];
                     mIMaxIndex = i;
@@ -190,7 +200,11 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
                     }else if(result){
                         return 1.0 - (value-min)/diff;
                     }
-
+                    //result == false 表示最值的计算上出现了错误
+                    //出现了最值中最小值并非数据中最小值的情况
+                    //主要出现在外部设入的最值这个情况下
+                    if(!result)
+                        return 1.0;
                 case DOWM:
                 case LEFT:
                     if(GraphUtils.doubleEqual0(diff) || result == null) {
@@ -199,6 +213,9 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
                     else if(result){
                         return (value-min)/diff;
                     }
+                    //result == false
+                    if(!result)
+                        return 0.0;
             }
             return 0.0;
         }

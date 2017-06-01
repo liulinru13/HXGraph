@@ -118,7 +118,7 @@ public class BarGraphAdapter extends GraphAdapterImp<BarGraphModel,BarGraphStrat
     protected void calculateYcoordinateScale(){
         List<BarsModel> list = new ArrayList<BarsModel>();
         double diff = mDMaxValue - mDMinValue;
-        diff = diff < 0.0 ? 0.0 : diff;
+        diff = diff <= 0.0 ? 1.0 : diff;
 
         for (int i = 0; i < mDValues.length; i++) {
             if(mDValues[i] != null) {

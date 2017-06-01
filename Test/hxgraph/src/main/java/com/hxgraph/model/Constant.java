@@ -10,6 +10,7 @@ import android.graphics.Color;
 public class Constant {
 
     public static final int NULLVALUE = 0x80000000;
+    public static final int MINVALUE = 0x7FFFFFFF;
     /*************线条常量************/
     public static float fDefaultStrokeWidth = 2;//默认线条宽度
     public static float fDefaultStrokeWidthBlod = 6.5f;//默认线条宽度

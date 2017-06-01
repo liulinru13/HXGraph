@@ -42,16 +42,6 @@ public class RedGreenGraphAdapter extends GraphAdapterImp<RedGreenGraphModel,Red
         if(obj == null)
             return null;
 
-//        if(obj instanceof Object[] && ((Object[])obj).length == 2) {
-//            //如果是object数组，第一个应该是数据
-//            if (((Object[]) obj)[0] != null && ((Object[]) obj)[0] instanceof double[]) {
-//                values = (double[]) ((Object[]) obj)[0];
-//            }
-//            //第二个应该是对应数据的颜色值
-//            if (((Object[]) obj)[1] != null && ((Object[]) obj)[1] instanceof int[]) {
-//                colors = (int[]) ((Object[]) obj)[1];
-//            }
-//        }
         if(obj instanceof double[])
             values = (double[])obj;
 
@@ -80,16 +70,21 @@ public class RedGreenGraphAdapter extends GraphAdapterImp<RedGreenGraphModel,Red
     protected void calculateYcoordinateScale(){
         List<BarModel> list = new ArrayList<BarModel>();
         double diff = mDMaxValue - mDMinValue;
-        diff = diff < 0.0 ? 0.0 : diff;
+        diff = diff <= 0.0 ? 1.0 : diff;
         for (int i = 0; i < mDValues.length; i++) {
             BarModel point = new BarModel();
             point.setfXcoordinateRaw(Constant.fDefaultX);
-            //实际值
-            point.setfValue((float) mDValues[i]);
-            //因为y坐标需要以参考线为基准来计算，现在没有高度，所以把比例先放到y坐标中
-            //实际高度坐标等于 referenceCoordinate - height * value / diff
-            //现在计算的是 value / diff
-            point.setfYcoordinateRaw((float) (mDValues[i]/diff));
+            if(mDValues[i] != Constant.MINVALUE) {
+
+                //实际值
+                point.setfValue((float) mDValues[i]);
+                //因为y坐标需要以参考线为基准来计算，现在没有高度，所以把比例先放到y坐标中
+                //实际高度坐标等于 referenceCoordinate - height * value / diff
+                //现在计算的是 value / diff
+                point.setfYcoordinateRaw((float) (mDValues[i] / diff));
+            }else{
+                point.setmBNeedSkip(true);
+            }
             //如果颜色值存在对应的也一并放入,否则根据正负值用默认颜色
             if(this.mIColors != null && this.mIColors.length > i){
                 point.setmIColor(mIColors[i]);
@@ -123,6 +118,8 @@ public class RedGreenGraphAdapter extends GraphAdapterImp<RedGreenGraphModel,Red
         if(list != null){
             referenceCoordinate += Constant.LINE_OFFSET;
             for(BarModel point : list){
+                if(point.ismBNeedSkip())
+                    continue;
                 float scale = point.getfYcoordinateRaw();
                 float lineHeight = height * scale;
                 if(Math.abs(lineHeight) < 1.0f){
