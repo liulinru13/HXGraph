@@ -79,4 +79,12 @@ public abstract class GraphStrategyImp<T extends PointCollectionImp> implements 
     public void setmCanvasLeft(int mCanvasLeft) {
         this.mCanvasLeft = mCanvasLeft;
     }
+
+    public void cleanData(){
+        mCanvasTop = Constant.fDefaultCanvasTranslateTY;
+        mCanvasLeft = Constant.fDefaultCanvasTranslateTX;
+        mPointCollection = null;
+        if(mPaint != null)
+            mPaint.reset();
+    }
 }

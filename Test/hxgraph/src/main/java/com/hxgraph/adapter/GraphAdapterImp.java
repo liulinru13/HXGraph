@@ -172,4 +172,18 @@ public abstract class GraphAdapterImp<T extends PointCollectionImp,P extends ISt
     public void setMaxMin(TagMaxMin maxMin) {
         this.maxMin = maxMin;
     }
+
+    /**
+     * 清空旧数据
+     */
+    public void cleanData(){
+        mORawData = null;
+        mData = null;
+        maxMin = null;
+        mDMaxValue = -1d;
+        mDMinValue = -1d;
+        mDValues = null;
+        if(mStrategy != null)
+            mStrategy.cleanData();
+    }
 }

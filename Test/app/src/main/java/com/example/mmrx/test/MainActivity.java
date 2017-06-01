@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements IDrawListener{
 //        graphManager = new HXGraphManager(new KLineAdapter());
 //        graphManager = new HXGraphManager(new HXKLineAdapter());
 //        graphManager = new HXGraphManager(new StockHistoryClosedGraphAdapter());
-        graphManager = new HXGraphManager(new StockBarGraphAdapter());
+        graphManager = new HXGraphManager();
+        graphManager.setAdapter(new StockBarGraphAdapter());
 //        KLineStrategyParam params = new KLineStrategyParam();
         StockBarGraphParams params = new StockBarGraphParams();
         params.setColor(Color.RED);

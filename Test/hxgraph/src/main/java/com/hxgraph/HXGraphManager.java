@@ -19,13 +19,19 @@ public class HXGraphManager {
     public HXGraphManager() {
     }
 
-    public HXGraphManager(GraphAdapterImp mAdapter) {
-        setAdapter(mAdapter);
+    public void setAdapter(Class<GraphAdapterImp> adapterClass, HXGraphCollection.INoGraphAdapterListener listener){
+        GraphAdapterImp imp = HXGraphCollection.getInstance().getAdapterByName(adapterClass, listener);
+        if(imp != null){
+            setAdapter(imp);
+        }
     }
 
     public void setAdapter(GraphAdapterImp mAdapter) {
-        this.mAdapter = mAdapter;
-        this.mStrategy = this.mAdapter.getGraphStrategy();
+        if(mAdapter != null) {
+            mAdapter.cleanData();
+            this.mAdapter = mAdapter;
+            this.mStrategy = this.mAdapter.getGraphStrategy();
+        }
     }
     /**
      * 设入原始数据
@@ -66,6 +72,7 @@ public class HXGraphManager {
     }
 
     public void draw(Canvas canvas, int height){
-        this.mAdapter.draw(canvas,height);
+        if(this.mAdapter != null)
+            this.mAdapter.draw(canvas,height);
     }
 }
