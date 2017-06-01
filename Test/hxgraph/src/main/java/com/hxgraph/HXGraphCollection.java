@@ -22,23 +22,50 @@ public class HXGraphCollection {
     }
 
     /**
-     *
-     * @param impClass
-     * @param listener
+     *通过适配器的类名来取用已经存在的适配器或者构建新的适配器
+     * @param impClass 适配器类
+     * @param listener 外部构造适配器的接口
      * @return
      */
-    public GraphAdapterImp getAdapterByName(Class<GraphAdapterImp> impClass,INoGraphAdapterListener listener){
-        if(impClass != null){
+    public GraphAdapterImp getAdapterByName(Class impClass
+            ,INoGraphAdapterListener listener){
+        if(impClass != null && GraphAdapterImp.class.isAssignableFrom(impClass)){
             if(map.containsKey(impClass.getSimpleName())){
                 return map.get(impClass.getSimpleName());
             }else{
                 //从外部获取
                 if(listener != null){
                     GraphAdapterImp imp = listener.getGraphAdapter();
-                    if(imp != null && imp.getClass().getSimpleName().equals(impClass.getSimpleName())){
+                    if(imp != null && imp.getClass().getSimpleName()
+                            .equals(impClass.getSimpleName())){
                         map.put(imp.getClass().getSimpleName(),imp);
                         return imp;
                     }
+                }
+            }
+        }//
+        return null;
+    }
+
+    /**
+     *通过适配器的类名来取用已经存在的适配器或者构建新的适配器
+     * @param impClass 适配器类
+     * @return
+     */
+    public GraphAdapterImp getAdapterByName(Class impClass){
+        if(impClass != null && GraphAdapterImp.class.isAssignableFrom(impClass)){
+            if(map.containsKey(impClass.getSimpleName())){
+                return map.get(impClass.getSimpleName());
+            }else{
+                try{
+                    GraphAdapterImp imp = (GraphAdapterImp)impClass.newInstance();
+                    if(imp != null && imp.getClass().getSimpleName()
+                            .equals(impClass.getSimpleName())){
+                        map.put(imp.getClass().getSimpleName(),imp);
+                        return imp;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         }//

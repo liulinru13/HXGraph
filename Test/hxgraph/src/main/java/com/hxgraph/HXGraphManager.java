@@ -19,8 +19,16 @@ public class HXGraphManager {
     public HXGraphManager() {
     }
 
-    public void setAdapter(Class<GraphAdapterImp> adapterClass, HXGraphCollection.INoGraphAdapterListener listener){
+    public void setAdapter(Class adapterClass
+            , HXGraphCollection.INoGraphAdapterListener listener){
         GraphAdapterImp imp = HXGraphCollection.getInstance().getAdapterByName(adapterClass, listener);
+        if(imp != null){
+            setAdapter(imp);
+        }
+    }
+
+    public void setAdapter(Class adapterClass){
+        GraphAdapterImp imp = HXGraphCollection.getInstance().getAdapterByName(adapterClass);
         if(imp != null){
             setAdapter(imp);
         }
