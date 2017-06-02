@@ -17,12 +17,12 @@ import java.util.List;
  * Created by liulinru on 2017/4/24.
  */
 
-public abstract class VolumeGraphAdapter extends GraphAdapterImp<VolumeGraphModel,VolumeGraphStrategyParam> {
-    protected double[] mDValues;//转换并处理后的原始数据
-    protected double mDMaxValue;//mDValues 范围内的最大值
-    protected int mIMaxIndex;//mDValues 范围内的最大值的坐标
-    protected double mDMinValue;//mDValues 范围内的最小值
-    protected int mIMinIndex;//mDValues 范围内的最小值坐标
+public class VolumeGraphAdapter extends GraphAdapterImp<VolumeGraphModel,VolumeGraphStrategyParam> {
+
+    private int[] mIColors;//数据点对应的颜色
+    private boolean[] mBFillOrStroke;//对应的柱子是否是实心柱
+    private boolean[] mBIsBold;//对应的柱子是否加粗
+
     @Override
     public Object doSomethingWithRawData(Object values) {
         return values;
@@ -72,6 +72,12 @@ public abstract class VolumeGraphAdapter extends GraphAdapterImp<VolumeGraphMode
         //线条参数设置
         if(params != null){
             mData.setmFBarWidth(params.getBarWidth());
+            mData.setmIColors(params.getColors());
+            mData.setmBUseLine(params.isUseLine());
+            mData.setmFStrokeWidthBlod(params.getStrokeWidthBlod());
+            mIColors = params.getColors();
+            mBFillOrStroke = params.getFillOrStroke();
+            mBIsBold = params.getIsBold();
             if(params.getxCoordinates() != null)
                 mData.setmFXCoordinates(params.getxCoordinates());
             maxMin = params.getMaxMin();
@@ -104,30 +110,49 @@ public abstract class VolumeGraphAdapter extends GraphAdapterImp<VolumeGraphMode
      * 这个方法需要在外面实现
      * 根据最值和展示方向，计算每个点在y方向上最大值最小值之间所占比例
      */
-    protected abstract void calculateYcoordinateScale();
-//    {
-//        List<BarModel> list = new ArrayList<BarModel>();
-//        double diff = mDMaxValue - mDMinValue;
-//        diff = diff < 0.0 ? 0.0 : diff;
-//
-//        for (int i = 0; i < mDValues.length; i++) {
-//            BarModel point = new BarModel();
-//            point.setfBarWidth(mData.getmFBarWidth());
-//            point.setbUseLine(true);
-//            point.setfLineRange();
-//            point.setfValue((float) mDValues[i]);
-//            point.setmIColor();
-//            point.setbIsStroke();
-//            point.setfYcoordinateRaw((float) (mDValues[i]/diff));
-//
-//            list.add(point);
-//
-//            if(mIMinIndex == i){
-//                mData.getmMaxMinPoints().setMinPoint(point,i);
-//            }else if(mIMaxIndex == i){
-//                mData.getmMaxMinPoints().setMaxPoint(point,i);
-//            }
-//        }
-//        mData.setIPointSet(list);
-//    }
+    protected void calculateYcoordinateScale(){
+        List<BarModel> list = new ArrayList<BarModel>();
+        double diff = mDMaxValue - mDMinValue;
+        diff = diff <= 0.0 ? 1.0 : diff;
+
+        for (int i = 0; i < mDValues.length; i++) {
+            BarModel point = new BarModel();
+            if(mDValues[i] != Constant.MINVALUE) {
+                point.setfBarWidth(mData.getmFBarWidth());
+                point.setbUseLine(mData.ismBUseLine());
+                point.setfValue((float) mDValues[i]);
+                if (mIColors != null && mIColors.length >= mDValues.length)
+                    point.setmIColor(mIColors[i]);
+                //是否加粗
+                if (mBIsBold != null && mBIsBold.length >= mDValues.length) {
+                    if(mBIsBold[i]) {
+                        point.setfStrokeWidth(mData.getmFStrokeWidthBlod());
+                    }
+                    else{
+                        point.setfStrokeWidth(mData.getmFStrokeWidth());
+                    }
+                }else{
+                    point.setfStrokeWidth(mData.getmFStrokeWidth());
+                }
+                //是实心还是空心
+                if (mBFillOrStroke != null && mBFillOrStroke.length >= mDValues.length) {
+                    if(mBFillOrStroke[i]) {
+                        point.setbIsStroke(false);
+                    }
+                }
+
+                point.setfYcoordinateRaw((float) (mDValues[i] / diff));
+            }else{
+                point.setmBNeedSkip(true);
+            }
+            list.add(point);
+
+            if(mIMinIndex == i){
+                mData.getmMaxMinPoints().setMinPoint(point,i);
+            }else if(mIMaxIndex == i){
+                mData.getmMaxMinPoints().setMaxPoint(point,i);
+            }
+        }
+        mData.setIPointSet(list);
+    }
 }

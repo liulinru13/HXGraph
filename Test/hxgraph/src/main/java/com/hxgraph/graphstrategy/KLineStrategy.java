@@ -48,84 +48,75 @@ public class KLineStrategy extends GraphStrategyImp<KLineModel> {
         for(int i=0;i<list.size();i++){
             KLinePointModel point = list.get(i);
 
-//            getValue(,fTopLimit,fBottomLimit)
-            point.setfOpenCoordinate(getValue(point.getfOpenCoordinate(),fTopLimit,fBottomLimit));
-            point.setfHighCoordinate(getValue(point.getfHighCoordinate(),fTopLimit,fBottomLimit));
-            point.setfLowCoordinate(getValue(point.getfLowCoordinate(),fTopLimit,fBottomLimit));
-            point.setfCloseCoordinate(getValue(point.getfCloseCoordinate(),fTopLimit,fBottomLimit));
-
-            mPaint.setColor(point.getmIColor());
-
             boolean isRise = false;//是否涨
             boolean isFill = false;//本次所使用的线条宽度
             boolean isLine = false;//本次是否使用的是线条
-
             float tempStrokeWidth = 0.0f;
-            // 涨的情况 开盘价 《 收盘价 或者 开盘价=收盘价 且 当日收盘 》= 前日收盘
-            if(point.getdOpenValue() < point.getdCloseValue()
-                    || (i > 0 && point.getdOpenValue() == point.getdCloseValue()
-                    && list.get(i-1) != null && point.getdCloseValue() >= list.get(i-1).getdCloseValue())){
-                isRise = true;
-            }
-            float middle = fXcoordinate + barWidth/2.0f;
-            //涨
-            if(isRise){
-                //加粗线条
-                mPaint.setStrokeWidth(strokeWidthBlod);
-                tempStrokeWidth = strokeWidthBlod;
-                //使用线条
-                if(point.isbIsLine()){
-                    isLine = true;
-                    canvas.drawLine(middle,point.getfLowCoordinate(),middle,point.getfHighCoordinate(),mPaint);
+            float middle = fXcoordinate + barWidth / 2.0f;
+
+            if(!point.ismBNeedSkip()) {
+                point.setfOpenCoordinate(getValue(point.getfOpenCoordinate(), fTopLimit, fBottomLimit));
+                point.setfHighCoordinate(getValue(point.getfHighCoordinate(), fTopLimit, fBottomLimit));
+                point.setfLowCoordinate(getValue(point.getfLowCoordinate(), fTopLimit, fBottomLimit));
+                point.setfCloseCoordinate(getValue(point.getfCloseCoordinate(), fTopLimit, fBottomLimit));
+
+                mPaint.setColor(point.getmIColor());
+
+                // 涨的情况 开盘价 《 收盘价 或者 开盘价=收盘价 且 当日收盘 》= 前日收盘
+                if (point.getdOpenValue() < point.getdCloseValue()
+                        || (i > 0 && point.getdOpenValue() == point.getdCloseValue()
+                        && list.get(i - 1) != null && point.getdCloseValue() >= list.get(i - 1).getdCloseValue())) {
+                    isRise = true;
                 }
-                //使用柱
-                else{
-                    if(point.getfOpenCoordinate() == point.getfCloseCoordinate()){
-                        //填充
+                //涨
+                if (isRise) {
+                    //加粗线条
+                    mPaint.setStrokeWidth(strokeWidthBlod);
+                    tempStrokeWidth = strokeWidthBlod;
+                    //使用线条
+                    if (point.isbIsLine()) {
+                        isLine = true;
+                        canvas.drawLine(middle, point.getfLowCoordinate(), middle, point.getfHighCoordinate(), mPaint);
+                    }
+                    //使用柱
+                    else {
+                        if (point.getfOpenCoordinate() == point.getfCloseCoordinate()) {
+                            //填充
+                            mPaint.setStyle(Paint.Style.FILL);
+                            isFill = true;
+                            canvas.drawRect(fXcoordinate, point.getfCloseCoordinate(),
+                                    fXcoordinate + barWidth, point.getfOpenCoordinate() + 1, mPaint);
+                        } else {
+                            //不填充
+                            mPaint.setStyle(Paint.Style.STROKE);
+                            canvas.drawRect(fXcoordinate, point.getfCloseCoordinate(),
+                                    fXcoordinate + barWidth, point.getfOpenCoordinate() + 1, mPaint);
+                            canvas.drawLine(middle, point.getfHighCoordinate(), middle,
+                                    point.getfCloseCoordinate() + Constant.LINE_OFFSET, mPaint);
+                            canvas.drawLine(middle, point.getfLowCoordinate(), middle,
+                                    point.getfOpenCoordinate() - Constant.LINE_OFFSET, mPaint);
+                        }
+                    }
+                }
+                //跌
+                else {
+                    mPaint.setStrokeWidth(strokeWidth);
+                    tempStrokeWidth = strokeWidth;
+                    //使用柱
+                    if (!point.isbIsLine()) {
                         mPaint.setStyle(Paint.Style.FILL);
                         isFill = true;
-                        canvas.drawRect(fXcoordinate,point.getfCloseCoordinate(),
-                                fXcoordinate+barWidth,point.getfOpenCoordinate()+1,mPaint);
-                    }else{
-                        //不填充
-                        mPaint.setStyle(Paint.Style.STROKE);
-                        canvas.drawRect(fXcoordinate,point.getfCloseCoordinate(),
-                                fXcoordinate+barWidth,point.getfOpenCoordinate()+1,mPaint);
-                        canvas.drawLine(middle,point.getfHighCoordinate(),middle,
-                                point.getfCloseCoordinate()+Constant.LINE_OFFSET,mPaint);
-                        canvas.drawLine(middle,point.getfLowCoordinate(),middle,
-                                point.getfOpenCoordinate()-Constant.LINE_OFFSET,mPaint);
+                        if (point.getfOpenCoordinate() == point.getfCloseCoordinate()) {
+                            canvas.drawRect(fXcoordinate, point.getfOpenCoordinate(),
+                                    fXcoordinate + barWidth, point.getfCloseCoordinate() + 1, mPaint);
+                        } else {
+                            canvas.drawRect(fXcoordinate, point.getfOpenCoordinate(),
+                                    fXcoordinate + barWidth, point.getfCloseCoordinate(), mPaint);
+                        }
                     }
+                    canvas.drawLine(middle, point.getfLowCoordinate(), middle, point.getfHighCoordinate(), mPaint);
                 }
-            }
-            //跌
-            else{
-                mPaint.setStrokeWidth(strokeWidth);
-                tempStrokeWidth = strokeWidth;
-                //使用柱
-                if(!point.isbIsLine()){
-                    mPaint.setStyle(Paint.Style.FILL);
-                    isFill = true;
-                    if(point.getfOpenCoordinate() == point.getfCloseCoordinate()){
-                        canvas.drawRect(fXcoordinate,point.getfOpenCoordinate(),
-                                fXcoordinate+barWidth,point.getfCloseCoordinate()+1,mPaint);
-                    }else{
-                        canvas.drawRect(fXcoordinate,point.getfOpenCoordinate(),
-                                fXcoordinate+barWidth,point.getfCloseCoordinate(),mPaint);
-                    }
-                }
-                canvas.drawLine(middle,point.getfLowCoordinate(),middle,point.getfHighCoordinate(),mPaint);
-            }
-//            if(isLine){
-//                fXcoordinate += barWidth;
-//            }else {
-//                //不填充内部与填充内部实际宽度有不同
-//                if (!isFill) {
-//                    fXcoordinate += barWidth + tempStrokeWidth;
-//                } else {
-//                    fXcoordinate += barWidth;
-//                }
-//            }
+            }//!point.ismBNeedSkip()
             if(calculateXSelf) {
                 fXcoordinate += barWidth;
                 if(!isLine && isFill)
@@ -136,8 +127,7 @@ public class KLineStrategy extends GraphStrategyImp<KLineModel> {
                     fXcoordinate = xCoordinates[i+1];
                 }
             }
-
-            drawTechLine(canvas,fBottomLimit,i,middle,barWidth,point);
+            drawTechLine(canvas, fBottomLimit, i, middle, barWidth, point);
         }
     }
 

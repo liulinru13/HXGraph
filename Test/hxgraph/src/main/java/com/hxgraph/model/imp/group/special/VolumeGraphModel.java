@@ -14,8 +14,10 @@ public class VolumeGraphModel extends PointCollectionImp<BarModel> {
 //    private int mIColorRise = Constant.iDefaultRiseColor;//上涨颜色
 //    private int mIColorDown = Constant.iDefaultDownColor;//下跌颜色
     private float mFBarWidth;//柱子的宽度
-//    private float mFStrokeWidth = Constant.fDefaultStrokeWidth;//线条宽度
-//    private float mFStrokeWidthBlod = Constant.fDefaultStrokeWidth;//线条宽度加粗
+    private float mFStrokeWidth = Constant.fDefaultStrokeWidth;//线条宽度
+    private float mFStrokeWidthBlod = Constant.fDefaultStrokeWidth;//线条宽度加粗
+    private int[] mIColors;//数据点对应的颜色
+    private boolean mBUseLine = false;//是否使用柱与直线形式判断
 
 //    public int getmIColorRise() {
 //        return mIColorRise;
@@ -41,19 +43,35 @@ public class VolumeGraphModel extends PointCollectionImp<BarModel> {
         this.mFBarWidth = mFBarWidth;
     }
 
-//    public float getmFStrokeWidth() {
-//        return mFStrokeWidth;
-//    }
+    public float getmFStrokeWidth() {
+        return mFStrokeWidth;
+    }
 
-//    public void setmFStrokeWidth(float mFStrokeWidth) {
-//        this.mFStrokeWidth = mFStrokeWidth;
-//    }
+    public void setmFStrokeWidth(float mFStrokeWidth) {
+        this.mFStrokeWidth = mFStrokeWidth;
+    }
 //
-//    public float getmFStrokeWidthBlod() {
-//        return mFStrokeWidthBlod;
-//    }
-//
-//    public void setmFStrokeWidthBlod(float mFStrokeWidthBlod) {
-//        this.mFStrokeWidthBlod = mFStrokeWidthBlod;
-//    }
+    public float getmFStrokeWidthBlod() {
+        return mFStrokeWidthBlod;
+    }
+
+    public void setmFStrokeWidthBlod(float mFStrokeWidthBlod) {
+        this.mFStrokeWidthBlod = mFStrokeWidthBlod;
+    }
+
+    public int[] getmIColors() {
+        return mIColors;
+    }
+
+    public void setmIColors(int[] mIColors) {
+        this.mIColors = mIColors;
+    }
+
+    public boolean ismBUseLine() {
+        return mBUseLine;
+    }
+
+    public void setmBUseLine(boolean mBUseLine) {
+        this.mBUseLine = mBUseLine;
+    }
 }

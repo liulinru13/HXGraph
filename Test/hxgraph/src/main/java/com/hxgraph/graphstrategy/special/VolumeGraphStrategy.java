@@ -52,7 +52,7 @@ public class VolumeGraphStrategy extends GraphStrategyImp<VolumeGraphModel> {
                 fXcoordinate += fXstepWidth * fXscale + point.getfStrokeWidth();
             else
                 fXcoordinate = xCoordinates[index];
-            if(point == null)
+            if(point == null || point.ismBNeedSkip())
                 continue;
             float yCoordinate = (referenceCoordinate - point.getfYcoordinateRaw())*fYscale;
             if(yCoordinate <= 0.0f){
@@ -73,12 +73,16 @@ public class VolumeGraphStrategy extends GraphStrategyImp<VolumeGraphModel> {
                     mPaint.setStyle(Paint.Style.FILL);
                 }
             }
-            canvas.drawRect(point.getfXcoordinate(), point.getfYcoordinateRaw()
-                    ,fXcoordinate+point.getfBarWidth(), referenceCoordinate, mPaint);
-
+            if(!point.isbUseLine()) {
+                canvas.drawRect(point.getfXcoordinate(), point.getfYcoordinateRaw()
+                        , fXcoordinate + point.getfBarWidth(), referenceCoordinate, mPaint);
+            }else{
+                float middleX = fXcoordinate + point.getfBarWidth() / 2.0f;
+                canvas.drawLine(middleX,point.getfYcoordinateRaw(),middleX,referenceCoordinate,mPaint);
+            }
             if(calculateXSelf) {
                 //不填充内部与填充内部实际宽度有不同
-                if (point.isbIsStroke()) {
+                if (point.isbIsStroke() && !point.isbUseLine()) {
                     fXcoordinate += point.getfBarWidth() + point.getfStrokeWidth();
                 } else {
                     fXcoordinate += point.getfBarWidth();

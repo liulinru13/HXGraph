@@ -68,6 +68,7 @@ public class RedGreenGraphStrategy extends GraphStrategyImp<RedGreenGraphModel> 
                 yCoordinate = fBottomLimit;
             }
             point.setfYcoordinateRaw(yCoordinate);
+            point.setfXcoordinate(fXcoordinate);
             mPaint.setColor(point.getmIColor());
             canvas.drawLine(point.getfXcoordinate(),referenceCoordinate
                     ,point.getfXcoordinate(),point.getfYcoordinateRaw(),mPaint);

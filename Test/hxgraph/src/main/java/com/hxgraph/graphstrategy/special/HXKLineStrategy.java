@@ -20,7 +20,7 @@ public class HXKLineStrategy extends KLineStrategy {
     protected void drawTechLine(Canvas canvas, float hight, int index, float middleX,
                                 float barWidth, KLinePointModel point) {
         super.drawTechLine(canvas, hight,index, middleX, barWidth, point);
-        if(point instanceof HXKLinePointModel){
+        if(point instanceof HXKLinePointModel && !point.ismBNeedSkip()){
             HXKLinePointModel hxPoint = (HXKLinePointModel)point;
 
             int distanceToKline = 3;

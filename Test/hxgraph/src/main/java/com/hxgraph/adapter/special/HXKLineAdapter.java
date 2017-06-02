@@ -50,12 +50,12 @@ public class HXKLineAdapter extends KLineAdapter {
         double diff = mDMaxValue - mDMinValue;
         diff = diff <= 0.0 ? 1.0 : diff;
 
-        for (int i = 0; i < mDValues[0].length; i++) {
+        for (int i = 0; i < mDValues.length; i++) {
             HXKLinePointModel point = new HXKLinePointModel();
-            point.setdOpenValue(mDValues[0][i]);//开
-            point.setdHighValue(mDValues[1][i]);//高
-            point.setdLowValue(mDValues[2][i]);//低
-            point.setdCloseValue(mDValues[3][i]);//收
+            point.setdOpenValue(mDValues[i][0]);//开
+            point.setdHighValue(mDValues[i][1]);//高
+            point.setdLowValue(mDValues[i][2]);//低
+            point.setdCloseValue(mDValues[i][3]);//收
 
             if(techArray != null && techArray.length > i){
                 if(techArray[i] != Constant.NULLVALUE)
@@ -71,8 +71,8 @@ public class HXKLineAdapter extends KLineAdapter {
 
             point.setbIsLine(mData.ismBIsUseLineNotBar());
             // 涨的情况 开盘价 《 收盘价 或者 开盘价=收盘价 且 当日收盘 》= 前日收盘
-            if(mDValues[0][i] < mDValues[3][i]
-                    || (i > 0 && mDValues[0][i] == mDValues[3][i] && mDValues[3][i] >= mDValues[3][i-1])){
+            if(mDValues[i][0] < mDValues[i][3]
+                    || (i > 0 && mDValues[i][0] == mDValues[i][3] && mDValues[i][3] >= mDValues[i-1][3])){
                 point.setmIColor(mData.getmIRiseColor());
             }else{
                 point.setmIColor(mData.getmIDownColor());

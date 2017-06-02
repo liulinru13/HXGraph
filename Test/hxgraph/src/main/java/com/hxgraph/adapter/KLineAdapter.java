@@ -18,12 +18,9 @@ import java.util.List;
  */
 
 public class KLineAdapter extends GraphAdapterImp<KLineModel,KLineStrategyParam> {
-
-    protected double[][] mDValues;//转换并处理后的原始数据
-    protected double mDMaxValue;//mDValues 范围内的最大值
-    protected int mIMaxIndex;//mDValues 范围内的最大值的坐标
-    protected double mDMinValue;//mDValues 范围内的最小值
-    protected int mIMinIndex;//mDValues 范围内的最小值坐标
+    //转换并处理后的原始数据
+    //每一个点数据都包括 开 高 低 收 四个子数据 --》 double[][4]
+    protected double[][] mDValues;
 
     @Override
     public Object doSomethingWithRawData(Object values) {
@@ -47,14 +44,12 @@ public class KLineAdapter extends GraphAdapterImp<KLineModel,KLineStrategyParam>
             return null;
         double[][] values = (double[][])this.mORawData;
         Object obj = doSomethingWithRawData(values);
-        if(obj == null || !(obj instanceof double[][] || ((double[][])obj).length != 4 ))
+        if(obj == null || !(obj instanceof double[][]))
             return null;
         values = (double[][])obj;
         if(values[0] != null){
-            int size = values[0].length;
-            if( (values[1] == null || values[1].length != size)
-                    || (values[2] == null || values[2].length != size)
-                    || (values[3] == null || values[3].length != size) )
+            double[] first = values[0];
+            if( first == null || first.length != 4)
                 return null;
 
             this.mDValues =  (double[][])obj;
@@ -67,6 +62,7 @@ public class KLineAdapter extends GraphAdapterImp<KLineModel,KLineStrategyParam>
                 mData.setmBIsRiseStroke(params.isRiseStroke());
                 mData.setmBIsUseLineNotBar(params.isUseLineNotBar());
                 mData.setmFStrokeWidthBlod(params.getStrokeWidthBlod());
+                mData.setmDPointWidth(params.getPointWidth());
                 if(params.getxCoordinates() != null)
                     mData.setmFXCoordinates(params.getxCoordinates());
             }
@@ -85,25 +81,29 @@ public class KLineAdapter extends GraphAdapterImp<KLineModel,KLineStrategyParam>
         double diff = mDMaxValue - mDMinValue;
         diff = diff <= 0.0 ? 1.0 : diff;
 
-        for (int i = 0; i < mDValues[0].length; i++) {
+        for (int i = 0; i < mDValues.length; i++) {
             KLinePointModel point = new KLinePointModel();
-            point.setdOpenValue(mDValues[0][i]);//开
-            point.setdHighValue(mDValues[1][i]);//高
-            point.setdLowValue(mDValues[2][i]);//低
-            point.setdCloseValue(mDValues[3][i]);//收
+            if(mDValues[i][0] != Constant.MINVALUE) {
+                point.setdOpenValue(mDValues[i][0]);//开
+                point.setdHighValue(mDValues[i][1]);//高
+                point.setdLowValue(mDValues[i][2]);//低
+                point.setdCloseValue(mDValues[i][3]);//收
 
-            point.setfOpenCoordinate((float) calculateScale(point.getdOpenValue(),diff));
-            point.setfHighCoordinate((float) calculateScale(point.getdHighValue(),diff));
-            point.setfLowCoordinate((float) calculateScale(point.getdLowValue(),diff));
-            point.setfCloseCoordinate((float) calculateScale(point.getdCloseValue(),diff));
+                point.setfOpenCoordinate((float) calculateScale(point.getdOpenValue(), diff));
+                point.setfHighCoordinate((float) calculateScale(point.getdHighValue(), diff));
+                point.setfLowCoordinate((float) calculateScale(point.getdLowValue(), diff));
+                point.setfCloseCoordinate((float) calculateScale(point.getdCloseValue(), diff));
 
-            point.setbIsLine(mData.ismBIsUseLineNotBar());
-            // 涨的情况 开盘价 《 收盘价 或者 开盘价=收盘价 且 当日收盘 》= 前日收盘
-            if(mDValues[0][i] < mDValues[3][i]
-                    || (i > 0 && mDValues[0][i] == mDValues[3][i] && mDValues[3][i] >= mDValues[3][i-1])){
-                point.setmIColor(mData.getmIRiseColor());
+                point.setbIsLine(mData.ismBIsUseLineNotBar());
+                // 涨的情况 开盘价 《 收盘价 或者 开盘价=收盘价 且 当日收盘 》= 前日收盘
+                if (mDValues[i][0] < mDValues[i][3]
+                        || (i > 0 && mDValues[i][0] == mDValues[i][3] && mDValues[i][3] >= mDValues[i - 1][3])) {
+                    point.setmIColor(mData.getmIRiseColor());
+                } else {
+                    point.setmIColor(mData.getmIDownColor());
+                }
             }else{
-                point.setmIColor(mData.getmIDownColor());
+                point.setmBNeedSkip(true);
             }
             list.add(point);
             if(mIMinIndex == i){
