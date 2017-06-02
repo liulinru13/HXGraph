@@ -62,6 +62,9 @@ public class StockBarGraphStrategy extends DotToLineStrategy {
             else
                 fXcoordinate = xCoordinates[index];
             LinePointModel point = data.get(index);
+            if(point.ismBNeedSkip())
+                continue;
+
             float lightHeight = fHeight * point.getfValue() / diff;
             if(Math.abs(lightHeight) < 1.0f){
                 lightHeight = lightHeight > 0 ? 1.0f: -1.0f;

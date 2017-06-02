@@ -48,51 +48,52 @@ public class BoolGraphStrategy extends KLineStrategy {
             fXcoordinate = xCoordinates[0];
         for(int i=0;i<list.size();i++){
             KLinePointModel point = list.get(i);
-
+            if(!point.ismBNeedSkip()) {
 //            getValue(,fTopLimit,fBottomLimit)
-            point.setfOpenCoordinate(getValue(point.getfOpenCoordinate(),fTopLimit,fBottomLimit));
-            point.setfHighCoordinate(getValue(point.getfHighCoordinate(),fTopLimit,fBottomLimit));
-            point.setfLowCoordinate(getValue(point.getfLowCoordinate(),fTopLimit,fBottomLimit));
-            point.setfCloseCoordinate(getValue(point.getfCloseCoordinate(),fTopLimit,fBottomLimit));
+                point.setfOpenCoordinate(getValue(point.getfOpenCoordinate(), fTopLimit, fBottomLimit));
+                point.setfHighCoordinate(getValue(point.getfHighCoordinate(), fTopLimit, fBottomLimit));
+                point.setfLowCoordinate(getValue(point.getfLowCoordinate(), fTopLimit, fBottomLimit));
+                point.setfCloseCoordinate(getValue(point.getfCloseCoordinate(), fTopLimit, fBottomLimit));
 
-            mPaint.setColor(point.getmIColor());
+                mPaint.setColor(point.getmIColor());
 
-            boolean isRise = false;//是否涨
-            boolean isFill = false;//本次所使用的线条宽度
-            boolean isLine = false;//本次是否使用的是线条
+                boolean isRise = false;//是否涨
+                boolean isFill = false;//本次所使用的线条宽度
+                boolean isLine = false;//本次是否使用的是线条
 
-            float tempStrokeWidth = 0.0f;
-            // 涨的情况 开盘价 《 收盘价 或者 开盘价=收盘价 且 当日收盘 》= 前日收盘
-            if(point.getdOpenValue() < point.getdCloseValue()
-                    || (i > 0 && point.getdOpenValue() == point.getdCloseValue()
-                    && list.get(i-1) != null && point.getdCloseValue() >= list.get(i-1).getdCloseValue())){
-                isRise = true;
+                float tempStrokeWidth = 0.0f;
+                // 涨的情况 开盘价 《 收盘价 或者 开盘价=收盘价 且 当日收盘 》= 前日收盘
+                if (point.getdOpenValue() < point.getdCloseValue()
+                        || (i > 0 && point.getdOpenValue() == point.getdCloseValue()
+                        && list.get(i - 1) != null && point.getdCloseValue() >= list.get(i - 1).getdCloseValue())) {
+                    isRise = true;
+                }
+                float middle = fXcoordinate + barWidth / 2.0f;
+                canvas.drawLine(fXcoordinate, point.getfOpenCoordinate(), middle,
+                        point.getfOpenCoordinate(), mPaint);
+                canvas.drawLine(middle, point.getfCloseCoordinate(), fXcoordinate + barWidth,
+                        point.getfCloseCoordinate(), mPaint);
+                canvas.drawLine(middle, point.getfLowCoordinate(), middle,
+                        point.getfHighCoordinate(), mPaint);
+//            涨
+                if (isRise) {
+                    canvas.drawLine(fXcoordinate, point.getfOpenCoordinate(), middle,
+                            point.getfOpenCoordinate(), mPaint);
+                    canvas.drawLine(middle, point.getfCloseCoordinate(), fXcoordinate + barWidth,
+                            point.getfCloseCoordinate(), mPaint);
+                    canvas.drawLine(middle, point.getfLowCoordinate(), middle,
+                            point.getfHighCoordinate(), mPaint);
+                }
+                //跌
+                else {
+                    canvas.drawLine(fXcoordinate, point.getfOpenCoordinate(), middle,
+                            point.getfOpenCoordinate(), mPaint);
+                    canvas.drawLine(middle, point.getfCloseCoordinate(), fXcoordinate + barWidth,
+                            point.getfCloseCoordinate(), mPaint);
+                    canvas.drawLine(middle, point.getfLowCoordinate(), middle,
+                            point.getfHighCoordinate(), mPaint);
+                }
             }
-            float middle = fXcoordinate + barWidth/2.0f;
-            canvas.drawLine(fXcoordinate,point.getfOpenCoordinate(),middle,
-                    point.getfOpenCoordinate(),mPaint);
-            canvas.drawLine(middle,point.getfCloseCoordinate(),fXcoordinate + barWidth,
-                    point.getfCloseCoordinate(),mPaint);
-            canvas.drawLine(middle,point.getfLowCoordinate(),middle,
-                    point.getfHighCoordinate(),mPaint);
-            //涨
-//            if(isRise){
-//                canvas.drawLine(fXcoordinate,point.getfOpenCoordinate(),middle,
-//                        point.getfOpenCoordinate(),mPaint);
-//                canvas.drawLine(middle,point.getfCloseCoordinate(),fXcoordinate + barWidth,
-//                        point.getfCloseCoordinate(),mPaint);
-//                canvas.drawLine(middle,point.getfLowCoordinate(),middle,
-//                        point.getfHighCoordinate(),mPaint);
-//            }
-//            //跌
-//            else{
-//                canvas.drawLine(fXcoordinate,point.getfOpenCoordinate(),middle,
-//                        point.getfOpenCoordinate(),mPaint);
-//                canvas.drawLine(middle,point.getfCloseCoordinate(),fXcoordinate + barWidth,
-//                        point.getfCloseCoordinate(),mPaint);
-//                canvas.drawLine(middle,point.getfLowCoordinate(),middle,
-//                        point.getfHighCoordinate(),mPaint);
-//            }
             if(calculateXSelf) {
                 fXcoordinate += barWidth;
             }

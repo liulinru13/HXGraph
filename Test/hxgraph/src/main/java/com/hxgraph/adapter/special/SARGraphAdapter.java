@@ -80,12 +80,16 @@ public class SARGraphAdapter extends GraphAdapterImp<SARGraphModel,SARGraphStrat
         diff = diff <= 0.0 ? 1.0 : diff;
         for (int i = 0; i < mDValues.length; i++) {
             LinePointModel point = new LinePointModel();
-            point.setfXcoordinateRaw(Constant.fDefaultX);
-            double scale = (mDValues[i] - mDMinValue)/diff;
-            point.setfYValuePercent((float)scale);
-            point.setfValue((float) mDValues[i]);
-            if(mColors != null && mColors.length == mDValues.length ){
-                point.setmIColor(mColors[i]);
+            if(mDValues[i] != Constant.MINVALUE) {
+                point.setfXcoordinateRaw(Constant.fDefaultX);
+                double scale = (mDValues[i] - mDMinValue) / diff;
+                point.setfYValuePercent((float) scale);
+                point.setfValue((float) mDValues[i]);
+                if (mColors != null && mColors.length == mDValues.length) {
+                    point.setmIColor(mColors[i]);
+                }
+            }else{
+                point.setmBNeedSkip(true);
             }
             list.add(point);
             if(mIMinIndex == i){

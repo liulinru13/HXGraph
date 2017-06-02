@@ -56,6 +56,8 @@ public class SARGraphStrategy extends GraphStrategyImp<SARGraphModel> {
                 fXcoordinate = xCoordinates[index];
 
             LinePointModel point = data.get(index);
+            if(point.ismBNeedSkip())
+                continue;
             float yCoordinate = point.getfYcoordinateRaw()*fYscale;
             if(yCoordinate <= 0.0f){
                 yCoordinate = fTopLimit;

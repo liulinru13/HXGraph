@@ -50,16 +50,19 @@ public class StockBarGraphAdapter extends DotToLineAdapter {
         diff = diff <= 0.0 ? 1.0 : diff;
         for (int i = 0; i < mDValues.length; i++) {
             LinePointModel point = new LinePointModel();
-            point.setfXcoordinateRaw(Constant.fDefaultX);
-            point.setfYValuePercent((float) (mDValues[i]/diff));
-            point.setfValue((float) mDValues[i]);
+            if(mDValues[i] != Constant.MINVALUE) {
+                point.setfXcoordinateRaw(Constant.fDefaultX);
+                point.setfYValuePercent((float) (mDValues[i] / diff));
+                point.setfValue((float) mDValues[i]);
 
-            if(mColors != null && mColors.length > i){
-                point.setmIColor(mColors[i]);
+                if (mColors != null && mColors.length > i) {
+                    point.setmIColor(mColors[i]);
+                } else {
+                    point.setmIColor(mData.getmIColor());
+                }
             }else{
-                point.setmIColor(mData.getmIColor());
+                point.setmBNeedSkip(true);
             }
-
             list.add(point);
             if(mIMinIndex == i){
                 mData.getmMaxMinPoints().setMinPoint(point,i);
