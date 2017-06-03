@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * SAR曲线
  * Created by liulinru on 2017/5/2.
  */
 

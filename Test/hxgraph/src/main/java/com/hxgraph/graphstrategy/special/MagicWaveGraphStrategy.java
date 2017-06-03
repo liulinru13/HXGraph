@@ -63,6 +63,8 @@ public class MagicWaveGraphStrategy extends GraphStrategyImp<MagicWaveGraphModel
                 fXcoordinate += fXstepWidth * fXscale;
             else
                 fXcoordinate = xCoordinates[index];
+            if(point.ismBNeedSkip())
+                continue;
             float stopY = 0;
             float diff = 0;
             int sign = point.getIValue();

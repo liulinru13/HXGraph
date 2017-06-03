@@ -55,6 +55,8 @@ public class StockWeatherglassGraphStrategy extends MagicWaveGraphStrategy {
                 else
                     stopX = xCoordinates[index+1];
             }
+            if(point.ismBNeedSkip())
+                continue;
             mPaint.setStrokeWidth(6);
             switch (point.getIValue()){
                 case 1://大盘晴

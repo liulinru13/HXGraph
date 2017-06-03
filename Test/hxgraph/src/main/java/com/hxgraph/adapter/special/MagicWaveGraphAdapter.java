@@ -74,11 +74,15 @@ public class MagicWaveGraphAdapter extends GraphAdapterImp<MagicWaveGraphModel,M
         List<MagicWavePointModel> list = new ArrayList<MagicWavePointModel>();
         for (int i = 0; i < mDValues.length; i++) {
             MagicWavePointModel point = new MagicWavePointModel();
-            point.setIValue(mDValues[i]);
-            if(mColors != null && mColors.length > i){
-                point.setmIColor(mColors[i]);
+            if(mDValues[i] != Constant.MINVALUE) {
+                point.setIValue(mDValues[i]);
+                if (mColors != null && mColors.length > i) {
+                    point.setmIColor(mColors[i]);
+                } else {
+                    point.setmIColor(Constant.iDefaultStrokeColor);
+                }
             }else{
-                point.setmIColor(Constant.iDefaultStrokeColor);
+                point.setmBNeedSkip(true);
             }
             list.add(point);
         }

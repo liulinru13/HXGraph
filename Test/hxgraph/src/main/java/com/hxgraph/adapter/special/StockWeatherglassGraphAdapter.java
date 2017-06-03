@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 大盘晴雨表
  * Created by liulinru on 2017/5/2.
  */
 
@@ -25,13 +26,17 @@ public class StockWeatherglassGraphAdapter extends MagicWaveGraphAdapter {
         List<MagicWavePointModel> list = new ArrayList<MagicWavePointModel>();
         for (int i = 0; i < mDValues.length; i++) {
             MagicWavePointModel point = new MagicWavePointModel();
-            point.setIValue(mDValues[i]);
-            if(mColors != null && mColors.length > 4){
-                if(mDValues[i] <= 3 && mDValues[i] >= 1) {
-                    point.setmIColor(mColors[mDValues[i]-1]);
+            if(mDValues[i] != Constant.MINVALUE) {
+                point.setIValue(mDValues[i]);
+                if (mColors != null && mColors.length >= 4) {
+                    if (mDValues[i] <= 3 && mDValues[i] >= 1) {
+                        point.setmIColor(mColors[mDValues[i] - 1]);
+                    }
+                } else {
+                    point.setmIColor(Constant.iDefaultStrokeColor);
                 }
             }else{
-                point.setmIColor(Constant.iDefaultStrokeColor);
+                point.setmBNeedSkip(true);
             }
             list.add(point);
         }
