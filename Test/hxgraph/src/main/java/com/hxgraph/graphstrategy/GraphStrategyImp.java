@@ -1,7 +1,9 @@
 package com.hxgraph.graphstrategy;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 
 import com.hxgraph.model.Constant;
 import com.hxgraph.model.imp.PointCollectionImp;
@@ -13,6 +15,8 @@ import com.hxgraph.model.imp.PointCollectionImp;
 
 public abstract class GraphStrategyImp<T extends PointCollectionImp> implements IGraphStrategy<T> {
     protected Paint mPaint;//画笔
+    protected Paint mPaintTrans;//透明画笔
+    protected Path mPath;
     protected T mPointCollection;
     protected int mCanvasTop = Constant.fDefaultCanvasTranslateTY;//将要绘制的图像在画布坐标系中顶点y的位置
     protected int mCanvasLeft = Constant.fDefaultCanvasTranslateTX;//将要绘制的图像在画布坐标系中顶点x的位置
@@ -35,8 +39,11 @@ public abstract class GraphStrategyImp<T extends PointCollectionImp> implements 
     protected void initPaint(T pointCollection){
         if(pointCollection == null)
             return;
-        if(mPaint == null)
+        if(mPaint == null) {
             mPaint = new Paint();
+            mPaintTrans = new Paint();
+            mPath = new Path();
+        }
         mPaint.reset();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);

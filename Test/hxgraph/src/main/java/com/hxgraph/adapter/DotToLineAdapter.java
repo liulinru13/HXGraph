@@ -50,6 +50,7 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
             mData.setmFStrokeWidth(params.getStrokeWidth());
             mData.setmOLineType(params.getLineType());
             mData.setmDotLineParam(params.getDotLineParam());
+            mData.setmBFillColor(params.isFillColor());
             maxMin = params.getMaxMin();
             if(params.getxCoordinates() != null)
                 mData.setmFXCoordinates(params.getxCoordinates());

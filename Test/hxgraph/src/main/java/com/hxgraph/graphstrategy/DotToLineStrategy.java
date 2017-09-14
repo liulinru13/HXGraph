@@ -1,9 +1,15 @@
 package com.hxgraph.graphstrategy;
 
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Shader;
+import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 
 import com.hxgraph.model.Constant;
 import com.hxgraph.model.imp.group.LineModel;
@@ -47,6 +53,10 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
     //需要知道绘图高度来计算y的实际坐标
     private void drawByYCoordinate(Canvas canvas,List<LinePointModel> data,
                                    LinePointModel firstPoint){
+
+        if(data == null || data.size() == 0)
+            return;
+
         float fXscale = mPointCollection.getmFXscale();//x缩放比例
         float fYscale = mPointCollection.getmFYscale();//y缩放比例
         float fXcoordinate = Constant.LINE_OFFSET;//当前的x方向实际坐标
@@ -69,20 +79,46 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
         else
             calculateXY(firstPoint,fYscale,fTopLimit,fBottomLimit,xCoordinates[0]);
 
+        //是否需要将线条所围成的图像的背景色设置为渐变的线条颜色
+        if(mPointCollection.ismBFillColor()) {
+            mPath.reset();
+            mPath.setFillType(Path.FillType.WINDING);
+            //左下第一个点
+            mPath.moveTo(data.get(0).getfXcoordinate(), fBottomLimit);
+            mPath.lineTo(data.get(0).getfXcoordinate(), data.get(0).getfYcoordinate());
+        }
+        LinePointModel nextPoint = null;
         for(int index = 0;index < data.size()-1;index++){
             LinePointModel point = data.get(index);
-            LinePointModel nextPoint = data.get(index+1);
+            nextPoint = data.get(index+1);
 
             if(calculateXSelf)
                 fXcoordinate += fXstepWidth * fXscale;
             else
-                fXcoordinate = xCoordinates[index];
+                fXcoordinate = xCoordinates[index+1];
             calculateXY(nextPoint,fYscale,fTopLimit,fBottomLimit,fXcoordinate);
             //两点成线，只要有一个点跳过，这条线就画不了，但是需要保留点的x坐标
             if(point == null || point.ismBNeedSkip() || nextPoint.ismBNeedSkip())
                 continue;
             canvas.drawLine(point.getfXcoordinate(),point.getfYcoordinate()
                     ,nextPoint.getfXcoordinate(),nextPoint.getfYcoordinate(),mPaint);
+            if(mPointCollection.ismBFillColor()) {
+                mPath.lineTo(nextPoint.getfXcoordinate(), nextPoint.getfYcoordinate());
+//                Log.e("DOT","lineTo to "+ nextPoint.getfXcoordinate() + "," + nextPoint.getfYcoordinate());
+            }
+
+        }
+        if(mPointCollection.ismBFillColor()) {
+            if (nextPoint != null) {
+                mPath.lineTo(nextPoint.getfXcoordinate(), fBottomLimit);
+//            Log.e("DOT","lineTo to "+ nextPoint.getfXcoordinate() + "," + fBottomLimit);
+                mPath.close();
+                LinearGradient linearGradient = new LinearGradient(0, 0, nextPoint.getfXcoordinate(),
+                        fBottomLimit * 0.8f, mPointCollection.getmIColor(), Color.TRANSPARENT, Shader.TileMode.CLAMP);
+                mPaintTrans.setStyle(Paint.Style.FILL);
+                mPaintTrans.setShader(linearGradient);
+                canvas.drawPath(mPath, mPaintTrans);
+            }
         }
     }
 

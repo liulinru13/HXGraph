@@ -2,6 +2,10 @@ package com.example.mmrx.test;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.FrameLayout;
 
 import com.hxgraph.HXGraphManager;
 import com.hxgraph.adapter.BarGraphAdapter;
+import com.hxgraph.adapter.DotToLineAdapter;
 import com.hxgraph.adapter.KLineAdapter;
 import com.hxgraph.adapter.special.HXKLineAdapter;
 import com.hxgraph.adapter.special.StockBarGraphAdapter;
@@ -40,14 +45,15 @@ public class MainActivity extends AppCompatActivity implements IDrawListener{
 //            {110.26,11.25,25.27,40.0,101.5}
 //        };
 //        int[] tech = new int[]{1,-1, Constant.NULLVALUE,1,-1};
+//        rawData = new double[]{100,180,233,300,150};
         rawData = new double[50];
         for(int j=0;j<rawData.length;j++) {
-            double temp = random.nextDouble() * 100.0;
-            if(j%2 == 0)
-                temp = - temp;
+            double temp = random.nextDouble() * 20.0+100;
+//            if(j%2 == 0)
+//                temp = - temp;
             rawData[j] = temp;
         }
-        float[] x = new float[]{10,50,100,200,203};
+//        float[] x = new float[]{10,50,100,200,250};
 //        for(int i=0;i<rawData.length;i++){
 //            for(int j=0;j<rawData[i].length;j++) {
 //                double temp = random.nextDouble() * 100.0;
@@ -59,12 +65,16 @@ public class MainActivity extends AppCompatActivity implements IDrawListener{
 //        graphManager = new HXGraphManager(new HXKLineAdapter());
 //        graphManager = new HXGraphManager(new StockHistoryClosedGraphAdapter());
         graphManager = new HXGraphManager();
-        graphManager.setAdapter(new StockBarGraphAdapter());
+//        graphManager.setAdapter(new StockBarGraphAdapter());
+        graphManager.setAdapter(new DotToLineAdapter());
 //        KLineStrategyParam params = new KLineStrategyParam();
-        StockBarGraphParams params = new StockBarGraphParams();
-        params.setColor(Color.RED);
-        params.setStrokeWidth(2);
-        params.setType(StockBarGraphParams.StockBarType.BBD);
+//        StockBarGraphParams params = new StockBarGraphParams();
+        DotToLineStrategyParam params = new DotToLineStrategyParam();
+        params.setColor(Color.BLUE);
+        params.setFillColor(true);
+//        params.setColor(Color.RED);
+//        params.setStrokeWidth(2);
+//        params.setType(StockBarGraphParams.StockBarType.BBD);
 //        params.setxCoordinates(x);
 //        ((HXKLineAdapter)(graphManager.getmAdapter())).setTechArray(tech);
         graphManager.setData(rawData,params);
@@ -79,6 +89,30 @@ public class MainActivity extends AppCompatActivity implements IDrawListener{
 
     @Override
     public void onDraw(View view, Canvas canvas) {
+//        graphManager.draw(canvas,0,(int)(view.getMeasuredHeight()*0.2),(int)(view.getMeasuredHeight()*0.5));
         graphManager.draw(canvas,view.getMeasuredHeight());
+//        Path mPath = new Path();
+//
+////        mPath.reset();
+//        mPath.setFillType(Path.FillType.WINDING);
+//        mPath.moveTo(10, 899);
+//        mPath.lineTo(10, 899);
+//        mPath.lineTo(50,540);
+//        mPath.lineTo(100,301);
+//        mPath.lineTo(200,2);
+//        mPath.lineTo(250,675);
+//        mPath.lineTo(250,899);
+//        mPath.close();
+//        LinearGradient linearGradient = new LinearGradient(0,0,250, 899, Color.BLUE,Color.TRANSPARENT, Shader.TileMode.CLAMP);
+//        Paint paint = new Paint();
+//        paint.setStyle(Paint.Style.FILL);
+//        paint.setShader(linearGradient);
+//        canvas.drawPath(mPath,paint);
+
+//        Path path = new Path();
+//        Path path2 = new Path();
+//        path.addCircle(200, 200, 100, Path.Direction.CCW);
+////        path2.addRect(200, 200, 300, 300, Path.Direction.CCW);
+//        canvas.drawPath(path, paint);
     }
 }

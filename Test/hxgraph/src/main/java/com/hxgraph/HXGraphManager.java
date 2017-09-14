@@ -83,4 +83,9 @@ public class HXGraphManager {
         if(this.mAdapter != null)
             this.mAdapter.draw(canvas,height);
     }
+
+    public void draw(Canvas canvas,int translateLeft,int tanslateTop,int height){
+        if(this.mAdapter != null)
+            this.mAdapter.draw(canvas,translateLeft,tanslateTop,height);
+    }
 }
