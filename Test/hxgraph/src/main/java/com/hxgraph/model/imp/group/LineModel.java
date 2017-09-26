@@ -16,6 +16,7 @@ public class LineModel extends PointCollectionImp<LinePointModel> implements IPo
     private int mIColor = Constant.iDefaultStrokeColor;//线条颜色
     private float mFStrokeWidth = Constant.fDefaultStrokeWidth;//线条宽度
     private boolean mBFillColor = false;//线条所围成的图形是否使用线条颜色作为背景渐变色
+    private int mIBgColor = Constant.NULLVALUE;//背景渐变色的颜色，如果没有设置就用线条颜色
     private LineType mOLineType = LineType.SOLID_LINE;//默认实线
     private float[] mDotLineParam = Constant.iDefaultDotLineParam;//默认虚线绘制参数
 //    private boolean mBUseScaleDrawGraph = false;//使用点的比例来计算和绘制图表
@@ -58,6 +59,14 @@ public class LineModel extends PointCollectionImp<LinePointModel> implements IPo
 
     public void setmBFillColor(boolean mBFillColor) {
         this.mBFillColor = mBFillColor;
+    }
+
+    public int getmIBgColor() {
+        return mIBgColor;
+    }
+
+    public void setmIBgColor(int mIBgColor) {
+        this.mIBgColor = mIBgColor;
     }
 
     //    public boolean ismBUseScaleDrawGraph() {

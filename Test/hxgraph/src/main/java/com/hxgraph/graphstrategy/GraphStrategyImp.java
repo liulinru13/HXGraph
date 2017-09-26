@@ -1,5 +1,6 @@
 package com.hxgraph.graphstrategy;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,6 +8,9 @@ import android.graphics.Path;
 
 import com.hxgraph.model.Constant;
 import com.hxgraph.model.imp.PointCollectionImp;
+
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 
 /**
  * 实现了 IGraphStrategy 接口的抽象类
@@ -18,6 +22,7 @@ public abstract class GraphStrategyImp<T extends PointCollectionImp> implements 
     protected Paint mPaintTrans;//透明画笔
     protected Path mPath;
     protected T mPointCollection;
+    protected WeakReference<Context> mWRcontext;
     protected int mCanvasTop = Constant.fDefaultCanvasTranslateTY;//将要绘制的图像在画布坐标系中顶点y的位置
     protected int mCanvasLeft = Constant.fDefaultCanvasTranslateTX;//将要绘制的图像在画布坐标系中顶点x的位置
     @Override
@@ -47,6 +52,11 @@ public abstract class GraphStrategyImp<T extends PointCollectionImp> implements 
         mPaint.reset();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
+    }
+
+    public void setContext(Context context){
+        if(context != null)
+            this.mWRcontext = new WeakReference<Context>(context);
     }
 
     /**

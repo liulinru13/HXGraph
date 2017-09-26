@@ -66,11 +66,12 @@ public class MainActivity extends AppCompatActivity implements IDrawListener{
 //        graphManager = new HXGraphManager(new StockHistoryClosedGraphAdapter());
         graphManager = new HXGraphManager();
 //        graphManager.setAdapter(new StockBarGraphAdapter());
-        graphManager.setAdapter(new DotToLineAdapter());
+        graphManager.setAdapter(new DotToLineAdapter(),null);
 //        KLineStrategyParam params = new KLineStrategyParam();
 //        StockBarGraphParams params = new StockBarGraphParams();
         DotToLineStrategyParam params = new DotToLineStrategyParam();
         params.setColor(Color.BLUE);
+        params.setBgColor(Color.GRAY);
         params.setFillColor(true);
 //        params.setColor(Color.RED);
 //        params.setStrokeWidth(2);

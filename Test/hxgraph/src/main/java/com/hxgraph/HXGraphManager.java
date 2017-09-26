@@ -1,5 +1,6 @@
 package com.hxgraph;
 
+import android.content.Context;
 import android.graphics.Canvas;
 
 import com.hxgraph.adapter.GraphAdapterImp;
@@ -19,26 +20,26 @@ public class HXGraphManager {
     public HXGraphManager() {
     }
 
-    public void setAdapter(Class adapterClass
+    public void setAdapter(Class adapterClass,Context context
             , HXGraphCollection.INoGraphAdapterListener listener){
         GraphAdapterImp imp = HXGraphCollection.getInstance().getAdapterByName(adapterClass, listener);
         if(imp != null){
-            setAdapter(imp);
+            setAdapter(imp,context);
         }
     }
 
-    public void setAdapter(Class adapterClass){
+    public void setAdapter(Class adapterClass,Context context){
         GraphAdapterImp imp = HXGraphCollection.getInstance().getAdapterByName(adapterClass);
         if(imp != null){
-            setAdapter(imp);
+            setAdapter(imp,context);
         }
     }
 
-    public void setAdapter(GraphAdapterImp mAdapter) {
+    public void setAdapter(GraphAdapterImp mAdapter, Context context) {
         if(mAdapter != null) {
             mAdapter.cleanData();
             this.mAdapter = mAdapter;
-            this.mStrategy = this.mAdapter.getGraphStrategy();
+            this.mStrategy = this.mAdapter.getGraphStrategy(context);
         }
     }
     /**

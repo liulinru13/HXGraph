@@ -1,5 +1,6 @@
 package com.hxgraph.adapter;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
@@ -164,6 +165,9 @@ public abstract class GraphAdapterImp<T extends PointCollectionImp,P extends ISt
      * @return
      */
     public abstract GraphStrategyImp<T> getGraphStrategy();
+    public GraphStrategyImp<T> getGraphStrategy(Context context){
+        return getGraphStrategy();
+    }
 
     public TagMaxMin getMaxMin() {
         return maxMin;

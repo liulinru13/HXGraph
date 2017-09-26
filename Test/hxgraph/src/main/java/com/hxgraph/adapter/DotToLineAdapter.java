@@ -1,5 +1,6 @@
 package com.hxgraph.adapter;
 
+import android.content.Context;
 import android.graphics.Canvas;
 
 import com.hxgraph.graphstrategy.DotToLineStrategy;
@@ -25,7 +26,13 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
 
     @Override
     public GraphStrategyImp<LineModel> getGraphStrategy() {
+        return getGraphStrategy(null);
+    }
+
+    @Override
+    public GraphStrategyImp<LineModel> getGraphStrategy(Context context) {
         mStrategy = new DotToLineStrategy();
+        mStrategy.setContext(context);
         return mStrategy;
     }
 
@@ -51,6 +58,7 @@ public class DotToLineAdapter extends GraphAdapterImp<LineModel,DotToLineStrateg
             mData.setmOLineType(params.getLineType());
             mData.setmDotLineParam(params.getDotLineParam());
             mData.setmBFillColor(params.isFillColor());
+            mData.setmIBgColor(params.getBgColor());
             maxMin = params.getMaxMin();
             if(params.getxCoordinates() != null)
                 mData.setmFXCoordinates(params.getxCoordinates());

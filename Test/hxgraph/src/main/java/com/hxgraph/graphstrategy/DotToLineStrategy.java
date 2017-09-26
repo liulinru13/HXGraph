@@ -1,6 +1,5 @@
 package com.hxgraph.graphstrategy;
 
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -8,8 +7,6 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Shader;
-import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 
 import com.hxgraph.model.Constant;
 import com.hxgraph.model.imp.group.LineModel;
@@ -63,6 +60,9 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
         float fXstepWidth = mPointCollection.getmFXSetp()*fXscale;//实际步宽
         float fTopLimit = mPointCollection.getmFTop()+1;
         float fBottomLimit = mPointCollection.getmIHeight() - 1.0f;
+        float fYMaxValue = 0.0f;
+        float fYMinValue = 0.0f;
+
         boolean calculateXSelf = false;
         float[] xCoordinates = null;
         if(mPointCollection.getmFXCoordinates() == null){
@@ -86,6 +86,8 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
             //左下第一个点
             mPath.moveTo(data.get(0).getfXcoordinate(), fBottomLimit);
             mPath.lineTo(data.get(0).getfXcoordinate(), data.get(0).getfYcoordinate());
+            fYMaxValue = data.get(0).getfYcoordinate();
+            fYMinValue = data.get(0).getfYcoordinate();
         }
         LinePointModel nextPoint = null;
         for(int index = 0;index < data.size()-1;index++){
@@ -100,6 +102,12 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
             //两点成线，只要有一个点跳过，这条线就画不了，但是需要保留点的x坐标
             if(point == null || point.ismBNeedSkip() || nextPoint.ismBNeedSkip())
                 continue;
+            if(fYMaxValue < nextPoint.getfYcoordinate()){
+                fYMaxValue = nextPoint.getfYcoordinate();
+            }
+            if(fYMinValue > nextPoint.getfYcoordinate()){
+                fYMinValue = nextPoint.getfYcoordinate();
+            }
             canvas.drawLine(point.getfXcoordinate(),point.getfYcoordinate()
                     ,nextPoint.getfXcoordinate(),nextPoint.getfYcoordinate(),mPaint);
             if(mPointCollection.ismBFillColor()) {
@@ -113,11 +121,18 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
                 mPath.lineTo(nextPoint.getfXcoordinate(), fBottomLimit);
 //            Log.e("DOT","lineTo to "+ nextPoint.getfXcoordinate() + "," + fBottomLimit);
                 mPath.close();
-                LinearGradient linearGradient = new LinearGradient(0, 0, nextPoint.getfXcoordinate(),
-                        fBottomLimit * 0.8f, mPointCollection.getmIColor(), Color.TRANSPARENT, Shader.TileMode.CLAMP);
+                int bgColor = mPointCollection.getmIBgColor();
+                if(bgColor == Constant.NULLVALUE)
+                    bgColor = mPointCollection.getmIColor();
+                LinearGradient linearGradient = new LinearGradient(0, fYMinValue, 0,
+                        fYMaxValue, bgColor, Color.TRANSPARENT, Shader.TileMode.CLAMP);
                 mPaintTrans.setStyle(Paint.Style.FILL);
                 mPaintTrans.setShader(linearGradient);
                 canvas.drawPath(mPath, mPaintTrans);
+//                if(mWRcontext != null && mWRcontext.get() != null){
+//                    Context context = mWRcontext.get();
+//                }
+
             }
         }
     }

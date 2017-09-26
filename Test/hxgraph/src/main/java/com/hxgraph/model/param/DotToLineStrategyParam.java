@@ -13,6 +13,7 @@ public class DotToLineStrategyParam extends IStrategyParamsImp {
     private int color = Constant.iDefaultStrokeColor;//线条颜色
     private float strokeWidth = Constant.fDefaultStrokeWidth;//线条宽度
     private boolean fillColor = false;//线条所围成的图形是否使用线条颜色作为背景渐变色
+    private int bgColor = Constant.NULLVALUE;//背景渐变色的颜色，如果没有设置就用线条颜色
     private LineModel.LineType lineType = LineModel.LineType.SOLID_LINE;//默认实线
     private float[] dotLineParam = Constant.iDefaultDotLineParam;//默认虚线绘制参数
 
@@ -54,5 +55,13 @@ public class DotToLineStrategyParam extends IStrategyParamsImp {
 
     public void setFillColor(boolean fillColor) {
         this.fillColor = fillColor;
+    }
+
+    public int getBgColor() {
+        return bgColor;
+    }
+
+    public void setBgColor(int bgColor) {
+        this.bgColor = bgColor;
     }
 }
