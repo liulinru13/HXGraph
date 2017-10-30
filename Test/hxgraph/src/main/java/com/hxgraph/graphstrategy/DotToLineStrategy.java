@@ -124,8 +124,9 @@ public class DotToLineStrategy extends GraphStrategyImp<LineModel> {
                 int bgColor = mPointCollection.getmIBgColor();
                 if(bgColor == Constant.NULLVALUE)
                     bgColor = mPointCollection.getmIColor();
+                int endColor = Color.argb(0,Color.red(bgColor),Color.green(bgColor),Color.blue(bgColor));
                 LinearGradient linearGradient = new LinearGradient(0, fYMinValue, 0,
-                        fYMaxValue, bgColor, Color.TRANSPARENT, Shader.TileMode.CLAMP);
+                        fYMaxValue, bgColor, endColor, Shader.TileMode.CLAMP);
                 mPaintTrans.setStyle(Paint.Style.FILL);
                 mPaintTrans.setShader(linearGradient);
                 canvas.drawPath(mPath, mPaintTrans);
